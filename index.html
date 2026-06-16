@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Demo Akses Kamera Browser</title>
 <style>
 body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 20px; background-color: #f4f4f9; }
-.container { max-widht: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
+/* PERBAIKAN: max-widht menjadi max-width */
+.container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
 button { padding: 14px 28px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 20px; }
 button:hover { background-color: #0056b3; }
 video { border: 3px solid #333; border-radius: 8px; width: 100%; background-color: #000; height: 300px; object-fit: cover; }
@@ -19,22 +20,35 @@ video { border: 3px solid #333; border-radius: 8px; width: 100%; background-colo
 <h2>Sistem Otorisasi Kamera Web</h2>
 <p style="color: #666; font-size: 14px;">Klik tombol di bawah untuk menguji akses kamera perangkat via browser.</p>
 
-<button onclick="mintaIzinKamera()">Aktifkan Kamera</buttron>
+<!-- PERBAIKAN: </buttron> menjadi </button> -->
+<button onclick="mintaIzinKamera()">Aktifkan Kamera</button>
 
 <video id="layarKamera" autoplay playsinline></video>
 </div>
 
 <script>
 function mintaIzinKamera() {
-navigator.meidaDevices.getUserMedia({ video: true, audio: false })
-.then(function(stream) {
-var video = document.getElementById('layarKamera');
-video.scrObject = stream;
-video.play();
-})
-.catch(function(error) {
-alert("Gagal mengakses Kamera: " + error.name);
-});
+// Menambahkan pengecekan fitur browser terlebih dahulu
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    
+    // PERBAIKAN: meidaDevices menjadi mediaDevices
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    .then(function(stream) {
+        var video = document.getElementById('layarKamera');
+        // PERBAIKAN: scrObject menjadi srcObject
+        video.srcObject = stream;
+        
+        // Note: video.play() sebenarnya sudah diwakili oleh atribut 'autoplay' di tag HTML, 
+        // namun memanggilnya di sini juga tidak masalah sebagai cadangan.
+        video.play(); 
+    })
+    .catch(function(error) {
+        alert("Gagal mengakses Kamera: " + error.name);
+    });
+
+} else {
+    alert("Browser Anda tidak mendukung fitur akses kamera.");
+}
 }
 </script>
 
